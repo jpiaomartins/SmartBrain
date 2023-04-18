@@ -5,6 +5,8 @@ import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
+import SignIn from './components/SignIn/SignIn';
+import Register from './components/Register/Register';
 import ParticlesBg from 'particles-bg'
 
 // Setting up Clarify
@@ -45,6 +47,8 @@ class App extends Component {
       input: '',
       imageUrl: '',
       box: {},
+      route: 'signin',
+      isSignedIn: false,
     }
   }
 
@@ -75,19 +79,46 @@ class App extends Component {
         .catch(error => console.log('error', error));
   }
 
+  onRouteChange = (route) => {
+    if(route === 'home') {
+      this.setState({route: route, isSignedIn: true})
+    } else if(route === 'signin') {
+      this.setState({route: route, isSignedIn: false})
+    } else {
+      this.setState({route: route})
+    }
+  }
 
   render() {
-    let {input, imageUrl, box} = this.state;
-    return (
-      <div className='App'>
-        <Navigation />
-        <Logo />
-        <Rank />
-        <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
-        <FaceRecognition imageUrl={imageUrl} box={box}/>
-        <ParticlesBg color="#ffffff" num={200} type="cobweb" bg={true} />
-      </div>
-    );
+    let {input, imageUrl, box, route, isSignedIn} = this.state;
+    if (route === 'signin') {
+      return (
+        <div className='App'>
+          <Navigation onRouteChange={this.onRouteChange} isSignedIn={isSignedIn} />
+          <SignIn onRouteChange={this.onRouteChange} />
+          <ParticlesBg color="#ffffff" num={200} type="cobweb" bg={true} />
+        </div>
+      );
+    } else if (route === 'register') {
+      return (
+        <div className='App'>
+          <Navigation onRouteChange={this.onRouteChange} isSignedIn={isSignedIn} />
+          <Register onRouteChange={this.onRouteChange} />
+          <ParticlesBg color="#ffffff" num={200} type="cobweb" bg={true} />
+        </div>
+      );
+    } else if(route === 'home') {
+      return (
+        <div className='App'>
+          <Navigation onRouteChange={this.onRouteChange} isSignedIn={isSignedIn} />
+          <Logo />
+          <Rank />
+          <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
+          <FaceRecognition imageUrl={imageUrl} box={box}/>
+          <ParticlesBg color="#ffffff" num={200} type="cobweb" bg={true} />
+        </div>
+      );
+    }
   }
 }
 
