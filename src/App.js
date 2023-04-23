@@ -49,7 +49,18 @@ class App extends Component {
       box: {},
       route: 'signin',
       isSignedIn: false,
+      user: {
+        id: '',
+        name: '',
+        email: '',
+        entries:  0,
+        joined: '',
+      }
     }
+  }
+
+  loadUser = (data) => {
+    this.setState({user: data})
   }
 
   calculateFaceLocation = (clarifaiResp) => {
@@ -90,12 +101,12 @@ class App extends Component {
   }
 
   render() {
-    let {input, imageUrl, box, route, isSignedIn} = this.state;
+    let {input, imageUrl, box, route, isSignedIn, user} = this.state;
     if (route === 'signin') {
       return (
         <div className='App'>
           <Navigation onRouteChange={this.onRouteChange} isSignedIn={isSignedIn} />
-          <SignIn onRouteChange={this.onRouteChange} />
+          <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
           <ParticlesBg color="#ffffff" num={200} type="cobweb" bg={true} />
         </div>
       );
@@ -103,7 +114,7 @@ class App extends Component {
       return (
         <div className='App'>
           <Navigation onRouteChange={this.onRouteChange} isSignedIn={isSignedIn} />
-          <Register onRouteChange={this.onRouteChange} />
+          <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
           <ParticlesBg color="#ffffff" num={200} type="cobweb" bg={true} />
         </div>
       );
@@ -112,7 +123,7 @@ class App extends Component {
         <div className='App'>
           <Navigation onRouteChange={this.onRouteChange} isSignedIn={isSignedIn} />
           <Logo />
-          <Rank />
+          <Rank name={user.name} entries={user.entries}/>
           <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
           <FaceRecognition imageUrl={imageUrl} box={box}/>
           <ParticlesBg color="#ffffff" num={200} type="cobweb" bg={true} />
