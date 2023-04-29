@@ -86,7 +86,23 @@ class App extends Component {
     let REQUEST_OPTIONS = clarifyReturnRequestOptions(this.state.input);
     fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs", REQUEST_OPTIONS)
         .then(response => response.json())
-        .then(result => this.calculateFaceLocation(result))
+        .then(result => {
+          if(result) {
+            fetch('http://localhost:3000/image', {
+                method: 'put',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    id: this.state.user.id
+                })})
+            .then(response => response.json())
+            .then(result => {
+              this.setState(Object.assign(this.state.user, {entries: result}));
+              console.log(result);
+            });
+
+            this.calculateFaceLocation(result)
+          }
+        })
         .catch(error => console.log('error', error));
   }
 
